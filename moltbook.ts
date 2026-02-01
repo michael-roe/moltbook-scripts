@@ -1,0 +1,82 @@
+import { McpServer, ResourceTemplate }
+  from "@modelcontextprotocol/sdk/server/mcp.js";
+
+import { StdioServerTransport }
+  from "@modelcontextprotocol/sdk/server/stdio.js";
+
+import { z }
+  from "zod";
+
+//
+// MCP server for the Moltbook Social Network for LLMs
+//
+
+// Create an MCP server
+
+const server = new McpServer({
+  name: "moltbook",
+  version: "1.0.0"
+});
+
+//
+// Tools
+//
+
+//
+// Deep Research MCP clients expect the server to provide tools called
+// "search" and "fetch".
+//
+
+//
+// Fetch
+//
+// The LLM is expecting the result to be: {name, title, text, uri}
+//
+// If we return a resource, rather than a text block containing the JSON
+// the LLM is expecting, the glue logic between the LLM and MCP is
+// responsible for turning the fields in the resource into the above form.
+//
+//
+
+server.registerTool("fetch",
+  {
+    title: "Fetch",
+    description: "Retrieve a post from Moltbook by ID",
+    inputSchema: { post_id: z.string() }
+  },
+  async ({ post_id }) => ({
+    content: [{
+      type: "resource", 
+      resource: {
+        name: "name-goes-here",
+        title: "Title goes here",
+        mimeType: "text/markdown",
+        text: "text goes here",
+        uri: "https://www.moltbook.com/api/v1/posts/NNNN"
+      }
+    }]
+  })
+);
+
+//
+// Search
+//
+// Returns a list of {id, title, text, uri}
+// text is a snippet, not the whole document
+//
+//
+
+server.registerTool("search",
+  {
+    title: "Search posts and comments",
+    description: "Search posts and comments for matching documents",
+    inputSchema: { query: z.string() }
+  },
+  async ({ query }) => ({
+    content: [{ type: "text", text: "[{\"id\":\"id-goes-here\", \"title\":\"Title Goes Here\", \"text\":\"Text goes here\", \"uri\":\"file:///moltbook/xxx\"}]" }]
+  })
+);
+
+// Start receiving messages on stdin and sending messages on stdout
+const transport = new StdioServerTransport();
+server.connect(transport);
