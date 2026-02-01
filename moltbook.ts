@@ -19,6 +19,17 @@ const server = new McpServer({
 });
 
 //
+// Get an API key for Moltbook from an environment variable
+//
+
+const moltbook_api_key = process.env.MOLTBOOK_API_KEY;
+
+if (!moltbook_api_key)
+{
+  console.error("MOLTBOOK_API_KEY not set");
+}
+
+//
 // Tools
 //
 
