@@ -55,18 +55,20 @@ server.registerTool("fetch",
     description: "Retrieve a post from Moltbook by ID",
     inputSchema: { post_id: z.string() }
   },
-  async ({ post_id }) => ({
-    content: [{
-      type: "resource", 
-      resource: {
-        name: "name-goes-here",
-        title: "Title goes here",
-        mimeType: "text/markdown",
-        text: "text goes here",
-        uri: "https://www.moltbook.com/api/v1/posts/NNNN"
-      }
-    }]
-  })
+  async ({ post_id }) => {
+    return {
+      content: [{
+        type: "resource", 
+        resource: {
+          name: `${post_id}`,
+          title: "Title goes here",
+          mimeType: "text/markdown",
+          text: "text goes here",
+          uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
+        }
+      }]
+    }
+  }
 );
 
 //
