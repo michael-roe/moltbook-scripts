@@ -56,14 +56,25 @@ server.registerTool("fetch",
     inputSchema: { post_id: z.string() }
   },
   async ({ post_id }) => {
+    const response = await fetch(
+      `https://www.moltbook.com/api/v1/posts/${post_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${moltbook_api_key}`
+          }
+        }
+      );
+
+    const post = await response.json();
+
     return {
       content: [{
         type: "resource", 
         resource: {
           name: `${post_id}`,
-          title: "Title goes here",
+          title: post["post"]["title"],
           mimeType: "text/markdown",
-          text: "text goes here",
+          text: post["post"]["content"],
           uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
         }
       }]
