@@ -65,6 +65,23 @@ server.registerTool("fetch",
         }
       );
 
+    if (!response.ok) {
+      const error_data = await response.text();
+      return {
+        content: [{
+          type: "resource",
+          resource: {
+            name: `${post_id}`,
+            title: "HTTP Error",
+            mimeType: "text/plain",
+            text: error_data,
+            uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
+          }
+        }],
+        isError: true
+      }
+    }
+
     const post = await response.json();
 
     if (!post.success) {
@@ -74,7 +91,7 @@ server.registerTool("fetch",
           resource: {
             name: `${post_id}`,
             mimeType: "text/plain",
-            text: post.error || "",
+            text: "",
             uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
           }
         }],
