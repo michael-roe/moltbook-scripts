@@ -67,6 +67,20 @@ server.registerTool("fetch",
 
     const post = await response.json();
 
+    if (!post.success) {
+      return {
+        content: [{
+          type: "resource",
+          resource: {
+            name: `${post_id}`,
+            mimeType: "text/plain",
+            text: post.error || "",
+            uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
+          }
+        }]
+      };
+    }
+
     return {
       content: [{
         type: "resource", 
