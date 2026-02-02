@@ -133,6 +133,20 @@ server.registerTool("search",
   })
 );
 
+server.registerTool("check_account_status",
+  {
+    title: "Check account status",
+    description: "Check if the user has completed creating the account",
+    inputSchema: { }
+  },
+  async ({ }) => ({
+    content: [{
+      type: "text",
+      text: "{}"
+    }]
+  })
+);
+
 // Start receiving messages on stdin and sending messages on stdout
 const transport = new StdioServerTransport();
 server.connect(transport);
