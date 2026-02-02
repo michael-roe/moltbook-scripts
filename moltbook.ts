@@ -77,7 +77,8 @@ server.registerTool("fetch",
             text: post.error || "",
             uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
           }
-        }]
+        }],
+        isError: true
       };
     }
 
