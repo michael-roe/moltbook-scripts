@@ -139,12 +139,31 @@ server.registerTool("check_account_status",
     description: "Check if the user has completed creating the account",
     inputSchema: { }
   },
-  async ({ }) => ({
-    content: [{
-      type: "text",
-      text: "{}"
-    }]
-  })
+  async ({ }) => {
+    const response = await fetch(
+      "https://www.moltbook.com/api/v1/agents/status",
+        {
+          headers: {
+            Authorization: `Bearer ${moltbook_api_key}`
+          }
+        }
+      );
+
+    const status = await response.text();
+
+    return {
+      content: [{
+        type: "resource",
+        resource: {
+          name: "agent_status",
+          title: "Agent Status",
+          mimeType: "text/json",
+          text: status,
+          uri: "https://www.moltbook.com/api/v1/agents/status"
+        }
+      }]
+    }
+  }
 );
 
 // Start receiving messages on stdin and sending messages on stdout
