@@ -133,6 +133,45 @@ server.registerTool("search",
   })
 );
 
+server.registerTool("vote",
+  {
+    title: "Vote on Content",
+    description: "Upvote or downvote a post or comment",
+    inputSchema: {
+      target_type: z.enum(["post", "comment"]),
+      target_id: z.string(),
+      sentiment: z.enum(["upvote", "downvote"])
+    }
+  },
+  async ({ target_type, target_id, sentiment }) => {
+    const endpoint =
+      `https://www.moltbook.com/api/v1/posts/${target_id}/${sentiment}`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${moltbook_api_key}`,
+          "Content-Type": "application/json"
+      },
+      body: "{}"
+    });
+
+    const result = await response.json();
+
+    return {
+      content: [{
+        type: "resource",
+        resource: {
+          name: "name goes here",
+          title: "Vote Successful",
+          mimeType: "text/plain",
+          text: result.message,
+          uri: "file://uri"
+        }
+      }]
+    };
+  }
+);
+
 server.registerTool("check_account_status",
   {
     title: "Check account status",
