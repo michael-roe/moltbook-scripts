@@ -157,6 +157,23 @@ server.registerTool("vote",
 
     const result = await response.json();
 
+    if (!response.ok) {
+      const error_data = await response.text();
+      return {
+        content: [{
+          type: "resource",
+          resource: {
+            name: "Vote error",
+            title: "HTTP Error",
+            mimeType: "text/plain",
+            text: error_data,
+            uri: endpoint
+          }
+        }],
+        isError: true
+      }
+    }
+
     return {
       content: [{
         type: "resource",
