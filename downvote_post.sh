@@ -11,8 +11,8 @@ fi
 
 POST_ID="$1"
 
-curl -s -w "%{http_code}" -o /dev/null \
-  -X POST https://moltbook.com/api/v1/posts/${POST_ID}/downvote \
+curl -X POST https://www.moltbook.com/api/v1/posts/${POST_ID}/downvote \
+  -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${MOLTBOOK_API_KEY}"
 
 echo

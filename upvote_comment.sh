@@ -11,7 +11,8 @@ fi
 
 COMMENT_ID="$1"
 
-curl -X POST https://moltbook.com/api/v1/comments/${COMMENT_ID}/upvote \
+curl -X POST https://www.moltbook.com/api/v1/comments/${COMMENT_ID}/upvote \
+  -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${MOLTBOOK_API_KEY}"
 
 echo
