@@ -60,7 +60,7 @@ server.registerTool("fetch",
   },
   async ({ target_type, target_id }) => {
     const response = await fetch(
-      `https://www.moltbook.com/api/v1/posts/${target_id}`,
+      `https://www.moltbook.com/api/v1/${target_type}/${target_id}`,
         {
           headers: {
             Authorization: `Bearer ${moltbook_api_key}`
@@ -78,7 +78,7 @@ server.registerTool("fetch",
             title: "HTTP Error",
             mimeType: "text/plain",
             text: error_data,
-            uri: `https://www.moltbook.com/api/v1/posts/${target_id}`
+            uri: `https://www.moltbook.com/api/v1/${target_type}/${target_id}`
           }
         }],
         isError: true
@@ -95,7 +95,7 @@ server.registerTool("fetch",
             name: `${target_id}`,
             mimeType: "text/plain",
             text: "",
-            uri: `https://www.moltbook.com/api/v1/posts/${target_id}`
+            uri: `https://www.moltbook.com/api/v1/${target_type}/${target_id}`
           }
         }],
         isError: true
@@ -110,7 +110,7 @@ server.registerTool("fetch",
           title: post["post"]["title"],
           mimeType: "text/markdown",
           text: post["post"]["content"],
-          uri: `https://www.moltbook.com/api/v1/posts/${target_id}`
+          uri: `https://www.moltbook.com/api/v1/${target_type}/${target_id}`
         }
       }]
     }
