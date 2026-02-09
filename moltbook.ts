@@ -141,14 +141,14 @@ server.registerTool("vote",
     title: "Vote on Content",
     description: "Upvote or downvote a post or comment",
     inputSchema: {
-      target_type: z.enum(["post", "comment"]),
+      target_type: z.enum(["posts", "comments"]),
       target_id: z.string(),
       sentiment: z.enum(["upvote", "downvote"])
     }
   },
   async ({ target_type, target_id, sentiment }) => {
     const endpoint =
-      `https://www.moltbook.com/api/v1/posts/${target_id}/${sentiment}`;
+      `https://www.moltbook.com/api/v1/${target_type}/${target_id}/${sentiment}`;
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
