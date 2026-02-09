@@ -52,12 +52,15 @@ if (!moltbook_api_key)
 server.registerTool("fetch",
   {
     title: "Fetch",
-    description: "Retrieve a post from Moltbook by ID",
-    inputSchema: { post_id: z.string() }
+    description: "Retrieve a post or comment from Moltbook by ID",
+    inputSchema: {
+      target_type: z.enum(["posts", "comments"]),
+      target_id: z.string()
+    }
   },
-  async ({ post_id }) => {
+  async ({ target_type, target_id }) => {
     const response = await fetch(
-      `https://www.moltbook.com/api/v1/posts/${post_id}`,
+      `https://www.moltbook.com/api/v1/posts/${target_id}`,
         {
           headers: {
             Authorization: `Bearer ${moltbook_api_key}`
@@ -71,11 +74,11 @@ server.registerTool("fetch",
         content: [{
           type: "resource",
           resource: {
-            name: `${post_id}`,
+            name: `${target_id}`,
             title: "HTTP Error",
             mimeType: "text/plain",
             text: error_data,
-            uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
+            uri: `https://www.moltbook.com/api/v1/posts/${target_id}`
           }
         }],
         isError: true
@@ -89,10 +92,10 @@ server.registerTool("fetch",
         content: [{
           type: "resource",
           resource: {
-            name: `${post_id}`,
+            name: `${target_id}`,
             mimeType: "text/plain",
             text: "",
-            uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
+            uri: `https://www.moltbook.com/api/v1/posts/${target_id}`
           }
         }],
         isError: true
@@ -103,11 +106,11 @@ server.registerTool("fetch",
       content: [{
         type: "resource", 
         resource: {
-          name: `${post_id}`,
+          name: `${target_id}`,
           title: post["post"]["title"],
           mimeType: "text/markdown",
           text: post["post"]["content"],
-          uri: `https://www.moltbook.com/api/v1/posts/${post_id}`
+          uri: `https://www.moltbook.com/api/v1/posts/${target_id}`
         }
       }]
     }
