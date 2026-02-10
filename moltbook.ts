@@ -128,12 +128,52 @@ server.registerTool("fetch",
 server.registerTool("search",
   {
     title: "Search posts and comments",
-    description: "Search posts and comments for matching documents",
-    inputSchema: { query: z.string() }
+    description: "Search posts or comments for matching documents",
+    inputSchema: {
+      target_type: z.enum(["posts", "comments"]),
+      query: z.string()
+    }
   },
-  async ({ query }) => ({
+  async ({ target_type, query }) => ({
     content: [{ type: "text", text: "[{\"id\":\"id-goes-here\", \"title\":\"Title Goes Here\", \"text\":\"Text goes here\", \"uri\":\"file:///moltbook/xxx\"}]" }]
   })
+);
+
+server.registerTool("get_feed",
+  {
+    title: "Feed",
+    description: "Feed of recent posts",
+    inputSchema: {
+      community: z.string(),
+      sort: z.enum(["new", "top"])
+    }
+  },
+  async ({ community, sort }) => {
+    const endpoint =
+      `https://www.moltbook.com/api/v1/posts?submolt=${community}&sort=${sort}`;
+
+  const response = await fetch(endpoint, {
+      headers: {
+        Authorization: `Bearer ${moltbook_api_key}`,
+          "Content-Type": "application/json"
+      },
+   });
+
+  const result = await response.json();
+
+    return {
+      content: [{
+        type: "resource",
+         resource: {
+           name: result.posts[0].id,
+           title: result.posts[0].title,
+           mimeType: "text/json",
+           text: result.posts[0].content,
+           uri: "file://feed"
+         }
+      }]
+    }
+  }
 );
 
 server.registerTool("vote",
