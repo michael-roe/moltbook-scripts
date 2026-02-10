@@ -161,6 +161,21 @@ server.registerTool("get_feed",
 
     const result = await response.json();
 
+    if (!result.success) {
+      return {
+        content: [{
+          type: "resource",
+          resource: {
+            name: "feed",
+            mimeType: "text/plain",
+            text: "",
+            uri: endpoint
+          }
+        }],
+        isError: true
+      };
+    }
+
     return {
       content: [{
         type: "resource",
