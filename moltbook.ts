@@ -152,14 +152,14 @@ server.registerTool("get_feed",
     const endpoint =
       `https://www.moltbook.com/api/v1/posts?submolt=${community}&sort=${sort}`;
 
-  const response = await fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${moltbook_api_key}`,
-          "Content-Type": "application/json"
-      },
-   });
+    const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${moltbook_api_key}`,
+            "Content-Type": "application/json"
+        },
+     });
 
-  const result = await response.json();
+    const result = await response.json();
 
     return {
       content: [{
