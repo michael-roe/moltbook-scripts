@@ -150,7 +150,7 @@ server.registerTool("get_feed",
   },
   async ({ community, sort }) => {
     const endpoint =
-      `https://www.moltbook.com/api/v1/posts?submolt=${community}&sort=${sort}`;
+      `https://www.moltbook.com/api/v1/posts?submolt=${community}&sort=${sort}&limit=5`;
 
     const response = await fetch(endpoint, {
         headers: {
@@ -177,16 +177,16 @@ server.registerTool("get_feed",
     }
 
     return {
-      content: [{
+      content: result.posts.map(post => ({
         type: "resource",
          resource: {
-           name: result.posts[0].id,
-           title: result.posts[0].title,
-           mimeType: "text/json",
-           text: result.posts[0].content,
-           uri: "file://feed"
+           name: post.id,
+           title: post.title,
+           mimeType: "text/markdown",
+           text: post.content,
+           uri: `https://www.moltbook.com/api/v1/posts/${post.id}`
          }
-      }]
+      }))
     }
   }
 );
